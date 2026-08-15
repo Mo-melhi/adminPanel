@@ -1,0 +1,397 @@
+.notifications-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Header ---------- */
+
+.notifications-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.notifications-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.notifications-header p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.notification-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.notification-summary-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--brand-50);
+    color: var(--brand);
+}
+
+.notification-summary strong {
+    display: block;
+    font-size: 18px;
+}
+
+.notification-summary span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+/* ---------- Alerts ---------- */
+
+.notification-alert {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 15px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+}
+
+.notification-alert.success {
+    color: var(--success);
+    background: var(--success-bg);
+}
+
+.notification-alert.error {
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.notification-alert button {
+    margin-right: auto;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+/* ---------- Reminder panel ---------- */
+
+.reminder-panel {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.reminder-panel-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: #e8f7ef;
+    color: #16834b;
+}
+
+.reminder-panel-content {
+    flex: 1;
+}
+
+.reminder-panel-content h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.reminder-panel-content p {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ---------- History ---------- */
+
+.notifications-history {
+    overflow: hidden;
+}
+
+.notifications-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface-2);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.filter-tab {
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.filter-tab.is-active {
+    background: var(--surface);
+    color: var(--brand);
+    box-shadow: var(--shadow-sm);
+}
+
+.notification-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 300px;
+    height: 38px;
+    padding: 0 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-muted);
+}
+
+.notification-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Notification row ---------- */
+
+.notification-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 17px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s ease;
+}
+
+.notification-row:hover {
+    background: var(--surface-2);
+}
+
+.notification-status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.notification-status-icon.is-sent {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.notification-status-icon.is-failed {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.notification-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-main-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-main-top strong {
+    font-size: 14px;
+}
+
+.notification-status {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.notification-status.sent {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.notification-status.failed {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.notification-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.notification-details span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ---------- Reminder picker ---------- */
+
+.reminder-picker-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(10, 20, 30, 0.45);
+}
+
+.reminder-picker {
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    overflow: auto;
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.reminder-picker-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.reminder-picker-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.reminder-picker-header p {
+    margin: 5px 0 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.reminder-bookings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reminder-booking {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.reminder-booking:hover {
+    border-color: var(--brand);
+    background: var(--brand-50);
+}
+
+.reminder-booking strong {
+    display: block;
+    font-size: 13px;
+}
+
+.reminder-booking span {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.reminder-booking-route {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--brand);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 700px) {
+    .notifications-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .notification-summary {
+        align-self: flex-start;
+    }
+
+    .reminder-panel {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .reminder-panel-content {
+        min-width: calc(100% - 70px);
+    }
+
+    .reminder-panel-action {
+        width: 100%;
+    }
+
+    .reminder-panel-action .btn {
+        width: 100%;
+    }
+
+    .notification-search {
+        width: 100%;
+    }
+
+    .notification-details {
+        flex-wrap: wrap;
+        gap: 7px 14px;
+    }
+}

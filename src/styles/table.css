@@ -1,0 +1,339 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  direction: rtl;
+}
+
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  direction: rtl;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  background: #edf2f6;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.filter-tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #607286;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.filter-tab:hover {
+  color: #0a7ea4;
+}
+
+.filter-tab.is-active {
+  background: #ffffff;
+  color: #0a7ea4;
+  box-shadow: 0 2px 7px rgba(7, 26, 51, 0.08);
+}
+
+.table-card {
+  background: #ffffff;
+  border: 1px solid #e1e8ef;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(7, 26, 51, 0.05);
+  overflow: hidden;
+  direction: rtl;
+}
+
+.table-scroll { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  direction: rtl;
+}
+
+.data-table th {
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+  color: #63758a;
+  padding: 15px 20px;
+  background: #f6f8fa;
+  border-bottom: 1px solid #e1e8ef;
+}
+
+.data-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #edf1f5;
+  font-size: 14px;
+  color: #24384d;
+  vertical-align: middle;
+  text-align: right;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.data-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.cell-primary {
+  font-weight: 700;
+  color: #071a33;
+}
+
+.cell-sub {
+  font-size: 13px;
+  color: #718398;
+  margin-top: 3px;
+}
+
+.cell-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: rtl;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--surface);
+  flex-shrink: 0;
+  background: var(--brand);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #718398;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: #edf7fb;
+  color: #0a7ea4;
+  border-color: #d7e8ef;
+}
+
+.icon-btn.danger:hover {
+  background: #fff0f0;
+  color: #d64545;
+  border-color: #f4d2d2;
+}
+
+.table-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid #edf1f5;
+  flex-wrap: wrap;
+  gap: 12px;
+  direction: rtl;
+}
+
+.foot-count {
+  font-size: 13px;
+  color: #718398;
+}
+
+/* Numbers, phone numbers and technical values remain LTR */
+.mono,
+.phone-number,
+.numeric-value {
+  direction: ltr;
+  unicode-bidi: plaintext;
+  text-align: right;
+}
+
+.foot-count {
+  direction: rtl;
+}
+
+.foot-count .number {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ---------- Pagination ---------- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.pagination-number {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination-separator {
+  margin: 0 2px;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  direction: rtl;
+}
+
+.pagination-buttons button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mono {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .page-toolbar { flex-direction: column; align-items: stretch; }
+}
+
+
+/* ---------- Bookings ---------- */
+
+.booking-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-muted);
+}
+
+.booking-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.booking-search input::placeholder {
+  color: var(--text-faint);
+}
+
+.booking-reference {
+  direction: ltr;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.booking-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  direction: ltr;
+  white-space: nowrap;
+}
+
+.booking-route strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.route-arrow {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.booking-price {
+  direction: ltr;
+  text-align: right;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Keep booking numbers/date/price LTR */
+.booking-reference,
+.booking-route,
+.booking-price,
+.data-table td.cell-sub {
+  unicode-bidi: plaintext;
+}
+
+@media (max-width: 900px) {
+  .booking-search {
+    width: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-search {
+    width: 100%;
+  }
+}

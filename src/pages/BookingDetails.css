@@ -1,0 +1,360 @@
+.booking-details-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Toolbar ---------- */
+
+.booking-details-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.booking-details-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ---------- Header ---------- */
+
+.booking-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px;
+}
+
+.booking-details-header-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.booking-plane-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--brand-50);
+    color: var(--brand);
+}
+
+.booking-details-reference {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.booking-details-reference span {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.booking-details-reference strong {
+    font-size: 20px;
+    letter-spacing: 0.02em;
+}
+
+.booking-details-flight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ---------- Route ---------- */
+
+.flight-route-card {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    align-items: center;
+    gap: 25px;
+    padding: 30px;
+}
+
+.route-location {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: right;
+}
+
+.route-location.arrival {
+    align-items: flex-end;
+    text-align: left;
+}
+
+.route-code {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--brand);
+}
+
+.route-location strong {
+    font-size: 20px;
+    margin-top: 3px;
+}
+
+.route-airport {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.route-date {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.route-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.route-line {
+    height: 1px;
+    flex: 1;
+    background: var(--border-strong);
+}
+
+.route-plane {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--brand-50);
+    color: var(--brand);
+}
+
+/* ---------- Details Grid ---------- */
+
+.booking-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.details-card {
+    padding: 20px;
+}
+
+.details-card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+    color: var(--brand);
+}
+
+.details-card-title h2 {
+    font-size: 16px;
+    color: var(--text);
+    margin: 0;
+}
+
+/* ---------- Customer ---------- */
+
+.customer-details {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.customer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--brand);
+    color: white;
+    font-weight: 800;
+    font-size: 17px;
+}
+
+.customer-details-info {
+    min-width: 0;
+}
+
+.customer-details-info > strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.customer-details-info > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.details-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ---------- Detail rows ---------- */
+
+.details-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.detail-row:first-child {
+    padding-top: 0;
+}
+
+.detail-row > span {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.detail-row > strong {
+    font-size: 13px;
+    text-align: left;
+}
+
+/* ---------- Price ---------- */
+
+.price-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 4px 0 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.price-display span {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.price-display strong {
+    font-size: 24px;
+    color: var(--brand);
+}
+
+/* ---------- Reminder ---------- */
+
+.reminder-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.reminder-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.reminder-icon.sent {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.reminder-icon.pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.reminder-status strong {
+    display: block;
+    font-size: 14px;
+}
+
+.reminder-status p {
+    margin: 3px 0 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 850px) {
+    .flight-route-card {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .route-location,
+    .route-location.arrival {
+        align-items: center;
+        text-align: center;
+    }
+
+    .route-middle {
+        width: 100%;
+    }
+
+    .booking-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .booking-details-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .booking-details-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .booking-details-actions {
+        width: 100%;
+    }
+
+    .booking-details-actions .btn {
+        flex: 1;
+    }
+
+    .flight-route-card {
+        padding: 22px 16px;
+    }
+
+    .route-code {
+        font-size: 24px;
+    }
+}
