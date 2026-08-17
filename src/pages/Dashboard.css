@@ -489,9 +489,6 @@
    UPCOMING BOOKINGS
    ========================================================= */
 
-.upcoming-list {
-  padding: 4px 24px;
-}
 
 .upcoming-item {
   display: flex;
@@ -761,9 +758,9 @@
   display: grid;
   grid-template-columns: 230px 1fr auto;
   align-items: center;
-  gap: 24px;
+  gap: 0px;
 
-  padding: 20px 24px;
+  padding: 20px 0px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -797,11 +794,12 @@
 }
 
 .route-line {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--brand);
+  color: #1486a8;
+  opacity: 0.9;
+  background-color: white;
 }
 
 /* Info */
@@ -873,4 +871,17 @@
   .upcoming-view {
     width: fit-content;
   }
+}
+
+.route-line {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.route-line svg {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }

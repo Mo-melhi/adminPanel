@@ -27,25 +27,25 @@ export default function ActivityFeed({ items = [] }) {
           </div>
         ) : (
           items.map((item) => {
-            const Icon = ICONS[item.type] || Bell
+            const Icon = Bell
 
             return (
               <div className="activity-item" key={item.id}>
-                <div className={`activity-icon activity-icon-${item.type}`}>
+                <div className="activity-icon activity-icon-reminder">
                   <Icon size={18} />
                 </div>
 
                 <div className="activity-content">
                   <div className="activity-message">
                     {item.status === "sent"
-                      ? `تم إرسال تذكير الرحلة إلى ${item.customer_name}`
+                      ? `تم إرسال تذكير للرحلة إلى ${item.full_name || "---"}`
                       : item.status === "failed"
-                        ? `فشل إرسال تذكير الرحلة إلى ${item.customer_name}`
-                        : `تحديث على حجز ${item.customer_name}`}
+                        ? `فشل إرسال تذكير للرحلة إلى ${item.full_name || "---"}`
+                        : `تحديث على الحجز ${item.pnr || item.ticket_number || item.booking_id || "---"}`}
                   </div>
 
                   <div className="activity-time">
-                    {formatRelative(item.timestamp)}
+                    {formatRelative(item.sent_at)}
                   </div>
                 </div>
               </div>

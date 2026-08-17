@@ -78,8 +78,29 @@ export const bookingApi = {
       mockStore = [created, ...mockStore]
       return withCustomerData(created)
     }
-    const { data } = await apiClient.post("/bookings", payload)
-    return data
+    const { data } = await apiClient.post(
+      "/bookings",
+      payload
+    )
+
+    try {
+      const customerResponse =
+        await apiClient.get(
+          `/customers/${payload.customer_id}`
+        )
+
+      return {
+        ...data,
+        full_name:
+          customerResponse.data.full_name,
+        phone:
+          customerResponse.data.phone,
+        whatsapp_number:
+          customerResponse.data.whatsapp_number,
+      }
+    } catch {
+      return data
+    }
   },
 
   async update(id, payload) {

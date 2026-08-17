@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import StatusBadge from "../common/StatusBadge"
-import { formatDate, formatCurrency } from "../../utils/format"
+import { formatDate } from "../../utils/format"
 import { Plane } from "lucide-react"
 
 export default function UpcomingBookings({ bookings = [] }) {
@@ -33,7 +33,10 @@ export default function UpcomingBookings({ bookings = [] }) {
                 </div>
 
                 <div className="route-line">
-                  <Plane size={17} />
+                  <Plane
+                    size={20}
+                    strokeWidth={1.8}
+                  />
                 </div>
 
                 <div className="airport">
@@ -56,21 +59,12 @@ export default function UpcomingBookings({ bookings = [] }) {
                 </div>
 
                 <div>
-                  <span className="upcoming-label">السعر</span>
-                  <strong>
-                    {formatCurrency(b.price, b.currency)}
+                  <span className="upcoming-label">الرحلة</span>
+                  <strong dir="ltr">
+                    {b.airline} · {b.flight_number}
                   </strong>
                 </div>
-
-                <StatusBadge status={b.booking_status} />
               </div>
-
-              <Link
-                to={`/bookings/${b.id}`}
-                className="upcoming-view"
-              >
-                عرض التفاصيل
-              </Link>
 
             </div>
           ))}
