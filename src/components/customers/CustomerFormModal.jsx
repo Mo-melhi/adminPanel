@@ -1,12 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Modal from "../common/Modal"
 
 const EMPTY = {
-  name: "",
-  email: "",
+  full_name: "",
   phone: "",
-  country: "",
-  status: "نشط",
+  whatsapp_number: "",
+  passport_number: "",
+  nationality: "",
+  notes: "",
 }
 
 export default function CustomerFormModal({
@@ -15,28 +16,50 @@ export default function CustomerFormModal({
   onSubmit,
   initial,
 }) {
-  const [form, setForm] = useState(initial || EMPTY)
+  const [form, setForm] = useState(EMPTY)
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
 
   const isEdit = Boolean(initial?.id)
 
+  useEffect(() => {
+    if (!open) return
+
+    setForm(
+      initial
+        ? {
+          full_name: initial.full_name || "",
+          phone: initial.phone || "",
+          whatsapp_number: initial.whatsapp_number || "",
+          passport_number: initial.passport_number || "",
+          nationality: initial.nationality || "",
+          notes: initial.notes || "",
+        }
+        : EMPTY
+    )
+
+    setErrors({})
+  }, [open, initial])
+
   function update(key, value) {
-    setForm((f) => ({ ...f, [key]: value }))
-    setErrors((e) => ({ ...e, [key]: undefined }))
+    setForm((current) => ({
+      ...current,
+      [key]: value,
+    }))
+
+    setErrors((current) => ({
+      ...current,
+      [key]: undefined,
+    }))
   }
 
   function validate() {
     const e = {}
 
-    if (!form.name.trim()) {
-      e.name = "الاسم مطلوب"
-    }
-
-    if (!form.email.trim()) {
-      e.email = "البريد الإلكتروني مطلوب"
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      e.email = "أدخل بريدًا إلكترونيًا صالحًا"
+    if (!form.full_name.trim()) {
+      e.full_name = "الاسم الكامل مطلوب"
+    } else if (form.full_name.trim().length < 3) {
+      e.full_name = "الاسم يجب أن يحتوي على 3 أحرف على الأقل"
     }
 
     const phone = form.phone.trim()
@@ -46,24 +69,63 @@ export default function CustomerFormModal({
     } else {
       const normalizedPhone = phone.replace(/[\s\-().]/g, "")
 
-      if (!/^\+?[0-9]{7,15}$/.test(normalizedPhone)) {
+      if (!/^\+?[0-9]{8,20}$/.test(normalizedPhone)) {
         e.phone = "أدخل رقم هاتف صالح"
       }
     }
 
+    if (form.whatsapp_number.trim()) {
+      const whatsapp = form.whatsapp_number
+        .trim()
+        .replace(/[\s\-().]/g, "")
+
+      if (!/^\+?[0-9]{8,20}$/.test(whatsapp)) {
+        e.whatsapp_number = "أدخل رقم واتساب صالح"
+      }
+    }
+
+    if (!form.passport_number.trim()) {
+      e.passport_number = "رقم جواز السفر مطلوب"
+    } else if (form.passport_number.trim().length < 5) {
+      e.passport_number = "رقم جواز السفر يجب أن يحتوي على 5 أحرف على الأقل"
+    }
+
+    if (!form.nationality.trim()) {
+      e.nationality = "الجنسية مطلوبة"
+    } else if (form.nationality.trim().length < 2) {
+      e.nationality = "الجنسية غير صالحة"
+    }
+
     setErrors(e)
+
     return Object.keys(e).length === 0
   }
 
-  async function handleSubmit(ev) {
-    ev.preventDefault()
+  async function handleSubmit(event) {
+    event.preventDefault()
 
     if (!validate()) return
 
     setSaving(true)
 
     try {
-      await onSubmit(form)
+      const payload = {
+        ...form,
+        full_name: form.full_name.trim(),
+        phone: form.phone
+          .trim()
+          .replace(/[\s\-().+]/g, ""),
+        whatsapp_number: form.whatsapp_number.trim()
+          ? form.whatsapp_number
+            .trim()
+            .replace(/[\s\-().+]/g, "")
+          : undefined,
+        passport_number: form.passport_number.trim(),
+        nationality: form.nationality.trim(),
+        notes: form.notes.trim() || undefined,
+      }
+
+      await onSubmit(payload)
       onClose()
     } finally {
       setSaving(false)
@@ -83,35 +145,15 @@ export default function CustomerFormModal({
           <label>الاسم الكامل</label>
 
           <input
-            className={`input ${errors.name ? "has-error" : ""}`}
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
-            placeholder="محمد أحمد"
+            className={`input ${errors.full_name ? "has-error" : ""}`}
+            value={form.full_name}
+            onChange={(e) => update("full_name", e.target.value)}
+            placeholder="محمد المسافر"
           />
 
-          {errors.name && (
+          {errors.full_name && (
             <span className="form-error">
-              {errors.name}
-            </span>
-          )}
-        </div>
-
-        {/* البريد الإلكتروني */}
-        <div className="form-field">
-          <label>البريد الإلكتروني</label>
-
-          <input
-            className={`input ${errors.email ? "has-error" : ""}`}
-            type="email"
-            dir="ltr"
-            value={form.email}
-            onChange={(e) => update("email", e.target.value)}
-            placeholder="jane@email.com"
-          />
-
-          {errors.email && (
-            <span className="form-error">
-              {errors.email}
+              {errors.full_name}
             </span>
           )}
         </div>
@@ -128,7 +170,7 @@ export default function CustomerFormModal({
             autoComplete="tel"
             value={form.phone}
             onChange={(e) => update("phone", e.target.value)}
-            placeholder="+1 555 012 3456"
+            placeholder="905551234567"
           />
 
           {errors.phone && (
@@ -138,31 +180,87 @@ export default function CustomerFormModal({
           )}
         </div>
 
-        {/* الدولة */}
+        {/* رقم الواتساب */}
         <div className="form-field">
-          <label>الدولة</label>
+          <label>رقم الواتساب</label>
 
           <input
-            className="input"
-            value={form.country}
-            onChange={(e) => update("country", e.target.value)}
-            placeholder="الولايات المتحدة"
+            className={`input ${errors.whatsapp_number ? "has-error" : ""}`}
+            type="tel"
+            dir="ltr"
+            inputMode="tel"
+            value={form.whatsapp_number}
+            onChange={(e) =>
+              update("whatsapp_number", e.target.value)
+            }
+            placeholder="905551234567"
           />
+
+          {errors.whatsapp_number && (
+            <span className="form-error">
+              {errors.whatsapp_number}
+            </span>
+          )}
         </div>
 
-        {/* الحالة */}
+        {/* رقم جواز السفر */}
         <div className="form-field">
-          <label>الحالة</label>
+          <label>رقم جواز السفر</label>
 
-          <select
-            className="input"
-            value={form.status}
-            onChange={(e) => update("status", e.target.value)}
-          >
-            <option value="active">نشط</option>
-            <option value="inactive">غير نشط</option>
-            <option value="vip">VIP</option>
-          </select>
+          <input
+            className={`input ${errors.passport_number ? "has-error" : ""}`}
+            dir="ltr"
+            value={form.passport_number}
+            onChange={(e) =>
+              update("passport_number", e.target.value)
+            }
+            placeholder="A12345678"
+          />
+
+          {errors.passport_number && (
+            <span className="form-error">
+              {errors.passport_number}
+            </span>
+          )}
+        </div>
+
+        {/* الجنسية */}
+        <div className="form-field">
+          <label>الجنسية</label>
+
+          <input
+            className={`input ${errors.nationality ? "has-error" : ""}`}
+            value={form.nationality}
+            onChange={(e) =>
+              update("nationality", e.target.value)
+            }
+            placeholder="اليمنية"
+          />
+
+          {errors.nationality && (
+            <span className="form-error">
+              {errors.nationality}
+            </span>
+          )}
+        </div>
+
+        {/* الملاحظات */}
+        <div className="form-field full-width">
+          <label>ملاحظات</label>
+
+          <textarea
+            className={`input ${errors.notes ? "has-error" : ""}`}
+            value={form.notes}
+            onChange={(e) => update("notes", e.target.value)}
+            placeholder="أضف أي ملاحظات خاصة بالعميل..."
+            rows={4}
+          />
+
+          {errors.notes && (
+            <span className="form-error">
+              {errors.notes}
+            </span>
+          )}
         </div>
 
         {/* الأزرار */}

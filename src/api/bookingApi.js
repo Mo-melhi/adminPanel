@@ -16,25 +16,38 @@ let mockStore = [...mockBookings]
 
 // Attach a resolved customer name for display convenience. If the backend
 // already returns a nested customer object, adapt this in one place.
-function withCustomerName(b) {
+function withCustomerData(b) {
   const customer = customerStore.find(
     (c) => c.id === Number(b.customer_id)
   )
 
   return {
     ...b,
-    customer_name:
-      customer?.full_name ||
-      customer?.name ||
-      "---",
+    full_name: customer?.full_name || "---",
+    phone: customer?.phone || null,
+    whatsapp_number: customer?.whatsapp_number || null,
   }
+}
+
+function calculateBoardingDatetime(departureDatetime) {
+  if (!departureDatetime) return null
+
+  const date = new Date(departureDatetime)
+
+  if (Number.isNaN(date.getTime())) {
+    return null
+  }
+
+  date.setHours(date.getHours() - 4)
+
+  return date.toISOString()
 }
 
 export const bookingApi = {
   async list() {
     if (USE_MOCK) {
       await delay()
-      return mockStore.map(withCustomerName)
+      return mockStore.map(withCustomerData)
     }
     const { data } = await apiClient.get("/bookings")
     return data
@@ -44,7 +57,7 @@ export const bookingApi = {
     if (USE_MOCK) {
       await delay(300)
       const found = mockStore.find((b) => b.id === Number(id))
-      return found ? withCustomerName(found) : null
+      return found ? withCustomerData(found) : null
     }
     const { data } = await apiClient.get(`/bookings/${id}`)
     return data
@@ -56,11 +69,14 @@ export const bookingApi = {
       const created = {
         ...payload,
         id: Math.max(0, ...mockStore.map((b) => b.id)) + 1,
+        boarding_datetime: calculateBoardingDatetime(
+          payload.departure_datetime
+        ),
         reminder_sent: false,
         created_at: new Date().toISOString(),
       }
       mockStore = [created, ...mockStore]
-      return withCustomerName(created)
+      return withCustomerData(created)
     }
     const { data } = await apiClient.post("/bookings", payload)
     return data
@@ -69,8 +85,26 @@ export const bookingApi = {
   async update(id, payload) {
     if (USE_MOCK) {
       await delay(500)
-      mockStore = mockStore.map((b) => (b.id === Number(id) ? { ...b, ...payload } : b))
-      return withCustomerName(mockStore.find((b) => b.id === Number(id)))
+      mockStore = mockStore.map((b) => {
+        if (b.id !== Number(id)) {
+          return b
+        }
+
+        const updated = {
+          ...b,
+          ...payload,
+        }
+
+        if (payload.departure_datetime) {
+          updated.boarding_datetime =
+            calculateBoardingDatetime(
+              payload.departure_datetime
+            )
+        }
+
+        return updated
+      })
+      return withCustomerData(mockStore.find((b) => b.id === Number(id)))
     }
     const { data } = await apiClient.put(`/bookings/${id}`, payload)
     return data

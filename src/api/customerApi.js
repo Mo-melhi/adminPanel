@@ -79,3 +79,6 @@ export const updateCustomer = (id, payload) =>
 
 export const deleteCustomer = (id) =>
     customerApi.remove(id);
+
+export const getCustomer = (id) =>
+  customerApi.get(id);

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, useLocation, Navigate } from "react-router-dom"
-import { Plane, Lock, Mail, AlertCircle } from "lucide-react"
+import { Plane, Lock, User, AlertCircle } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 import { normalizeError } from "../hooks/useApi"
 import { USE_MOCK } from "../api/apiClient"
@@ -12,7 +12,7 @@ export default function Login() {
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
 
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState("")
@@ -27,7 +27,7 @@ export default function Login() {
     setSubmitting(true)
 
     try {
-      await login({ email, password })
+      await login({ username, password })
       navigate(from, { replace: true })
     } catch (err) {
       setError(normalizeError(err))
@@ -108,27 +108,27 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} noValidate>
 
-            {/* Email */}
+            {/* Username */}
             <div className="field">
               <label
                 className="field-label"
-                htmlFor="email"
+                htmlFor="username"
               >
-                البريد الإلكتروني
+                اسم المستخدم
               </label>
 
               <div className="search login-input-wrapper">
-                <Mail size={16} />
+                <User size={16} />
 
                 <input
-                  id="email"
+                  id="username"
                   className="input"
-                  type="email"
+                  type="text"
                   dir="ltr"
                   autoComplete="username"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@turbotravel.net"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin"
                   required
                 />
               </div>
@@ -187,7 +187,7 @@ export default function Login() {
           {USE_MOCK && (
             <p className="login-hint">
               وضع المعاينة — لا يوجد اتصال بالخادم حاليًا.
-              أدخل أي بريد إلكتروني وكلمة مرور لاستكشاف لوحة التحكم.
+              أدخل أي اسم مستخدم وكلمة مرور لاستكشاف لوحة التحكم.
             </p>
           )}
 

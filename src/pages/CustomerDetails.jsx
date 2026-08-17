@@ -2,17 +2,18 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import {
     ArrowRight,
-    Mail,
     Phone,
-    MapPin,
-    User,
+    MessageCircle,
+    CreditCard,
+    Globe,
+    FileText,
+    CalendarDays,
 } from "lucide-react"
 
-import { getCustomers } from "../api/customerApi"
+import { getCustomer } from "../api/customerApi"
 import { usePageMeta } from "../components/layout/layoutMeta"
 import { LoadingState, ErrorState } from "../components/common/States"
 import Avatar from "../components/common/Avatar"
-import StatusBadge from "../components/common/StatusBadge"
 
 import "./CustomerDetails.css"
 
@@ -34,11 +35,7 @@ export default function CustomerDetails() {
             setError(null)
 
             try {
-                const customers = await getCustomers()
-
-                const found = customers.find(
-                    (c) => Number(c.id) === Number(id)
-                )
+                const found = await getCustomer(id)
 
                 if (!found) {
                     throw new Error(
@@ -70,6 +67,9 @@ export default function CustomerDetails() {
 
     return (
         <div className="customer-details-page">
+
+            {/* العودة */}
+
             <Link
                 to="/customers"
                 className="back-link"
@@ -79,84 +79,159 @@ export default function CustomerDetails() {
             </Link>
 
             <div className="customer-details-card">
+
+                {/* ================= HEADER ================= */}
+
                 <div className="customer-details-header">
+
                     <Avatar
-                        name={customer.name}
+                        name={customer.full_name}
                     />
 
                     <div>
                         <h1>
-                            {customer.name}
+                            {customer.full_name}
                         </h1>
 
-                        <StatusBadge
-                            status={customer.status}
-                        />
+                        <span className="customer-details-subtitle">
+                            عميل
+                        </span>
                     </div>
+
                 </div>
+
+                {/* ================= DETAILS ================= */}
 
                 <div className="customer-details-grid">
 
-                    <div className="customer-detail">
-                        <Mail size={18} />
-
-                        <div>
-                            <span>
-                                البريد الإلكتروني
-                            </span>
-
-                            <strong dir="ltr">
-                                {customer.email}
-                            </strong>
-                        </div>
-                    </div>
+                    {/* الهاتف */}
 
                     <div className="customer-detail">
+
                         <Phone size={18} />
 
                         <div>
+
                             <span>
                                 رقم الهاتف
                             </span>
 
                             <strong dir="ltr">
-                                {customer.phone}
+                                {customer.phone || "---"}
                             </strong>
+
                         </div>
+
                     </div>
 
+                    {/* الواتساب */}
+
                     <div className="customer-detail">
-                        <MapPin size={18} />
+
+                        <MessageCircle size={18} />
 
                         <div>
+
                             <span>
-                                الدولة
+                                رقم الواتساب
+                            </span>
+
+                            <strong dir="ltr">
+                                {customer.whatsapp_number || "---"}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {/* جواز السفر */}
+
+                    <div className="customer-detail">
+
+                        <CreditCard size={18} />
+
+                        <div>
+
+                            <span>
+                                رقم جواز السفر
+                            </span>
+
+                            <strong dir="ltr">
+                                {customer.passport_number || "---"}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {/* الجنسية */}
+
+                    <div className="customer-detail">
+
+                        <Globe size={18} />
+
+                        <div>
+
+                            <span>
+                                الجنسية
                             </span>
 
                             <strong>
-                                {customer.country ||
-                                    "---"}
+                                {customer.nationality || "---"}
                             </strong>
+
                         </div>
+
                     </div>
 
+                    {/* تاريخ الإضافة */}
+
                     <div className="customer-detail">
-                        <User size={18} />
+
+                        <CalendarDays size={18} />
 
                         <div>
+
                             <span>
-                                عدد الحجوزات
+                                تاريخ الإضافة
+                            </span>
+
+                            <strong dir="ltr">
+                                {customer.created_at
+                                    ? new Date(
+                                        customer.created_at
+                                    ).toLocaleDateString("ar")
+                                    : "---"}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {/* الملاحظات */}
+
+                    <div className="customer-detail customer-detail-wide">
+
+                        <FileText size={18} />
+
+                        <div>
+
+                            <span>
+                                ملاحظات
                             </span>
 
                             <strong>
-                                {customer.bookingsCount ??
-                                    0}
+                                {customer.notes || "---"}
                             </strong>
+
                         </div>
+
                     </div>
 
                 </div>
+
             </div>
+
         </div>
     )
 }

@@ -38,10 +38,10 @@ export default function ActivityFeed({ items = [] }) {
                 <div className="activity-content">
                   <div className="activity-message">
                     {item.status === "sent"
-                      ? `تم إرسال تذكير الرحلة ${item.flight_number} إلى ${item.customer_name}`
+                      ? `تم إرسال تذكير الرحلة إلى ${item.customer_name}`
                       : item.status === "failed"
-                        ? `فشل إرسال تذكير الرحلة ${item.flight_number} إلى ${item.customer_name}`
-                        : `تحديث على الرحلة ${item.flight_number}`}
+                        ? `فشل إرسال تذكير الرحلة إلى ${item.customer_name}`
+                        : `تحديث على حجز ${item.customer_name}`}
                   </div>
 
                   <div className="activity-time">

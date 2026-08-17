@@ -14,11 +14,10 @@ import {
     CreditCard,
     Bell,
     Phone,
-    Mail,
+    MessageCircle,
 } from "lucide-react"
 
 import { bookingApi } from "../api/bookingApi"
-import { customerApi } from "../api/customerApi"
 import { usePageMeta } from "../components/layout/layoutMeta"
 import StatusBadge from "../components/common/StatusBadge"
 import ConfirmDialog from "../components/common/ConfirmDialog"
@@ -45,7 +44,6 @@ export default function BookingDetails() {
     usePageMeta("تفاصيل الحجز", ["الرئيسية", "الحجوزات", "تفاصيل الحجز"])
 
     const [booking, setBooking] = useState(null)
-    const [customer, setCustomer] = useState(null)
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -65,13 +63,6 @@ export default function BookingDetails() {
                 }
 
                 setBooking(data)
-
-                if (data.customer_id) {
-                    const customerData =
-                        await customerApi.get(data.customer_id)
-
-                    setCustomer(customerData)
-                }
             } catch (err) {
                 setError(
                     err.message || "تعذر تحميل تفاصيل الحجز"
@@ -218,8 +209,8 @@ export default function BookingDetails() {
                     >
                         {booking.departure_datetime
                             ? formatDateTime(
-                                  booking.departure_datetime
-                              )
+                                booking.departure_datetime
+                            )
                             : "—"}
                     </span>
                 </div>
@@ -253,8 +244,8 @@ export default function BookingDetails() {
                     >
                         {booking.arrival_datetime
                             ? formatDateTime(
-                                  booking.arrival_datetime
-                              )
+                                booking.arrival_datetime
+                            )
                             : "—"}
                     </span>
                 </div>
@@ -262,42 +253,48 @@ export default function BookingDetails() {
 
             <div className="booking-details-grid">
                 {/* Customer */}
+                {/* Customer */}
                 <section className="details-card card">
                     <div className="details-card-title">
                         <User size={18} />
                         <h2>بيانات العميل</h2>
                     </div>
 
-                    {customer ? (
+                    {booking.full_name ? (
                         <div className="customer-details">
+
                             <div className="customer-avatar">
-                                {(customer.full_name || "؟")
+                                {booking.full_name
                                     .charAt(0)
                                     .toUpperCase()}
                             </div>
 
                             <div className="customer-details-info">
+
                                 <strong>
-                                    {customer.full_name || "—"}
+                                    {booking.full_name}
                                 </strong>
 
-                                {customer.phone && (
+                                {booking.phone && (
                                     <div>
                                         <Phone size={14} />
+
                                         <span dir="ltr">
-                                            {customer.phone}
+                                            {booking.phone}
                                         </span>
                                     </div>
                                 )}
 
-                                {customer.email && (
+                                {booking.whatsapp_number && (
                                     <div>
-                                        <Mail size={14} />
+                                        <MessageCircle size={14} />
+
                                         <span dir="ltr">
-                                            {customer.email}
+                                            {booking.whatsapp_number}
                                         </span>
                                     </div>
                                 )}
+
                             </div>
                         </div>
                     ) : (
@@ -346,7 +343,7 @@ export default function BookingDetails() {
                                     Business: "رجال أعمال",
                                     First: "الدرجة الأولى",
                                 }[
-                                    booking.ticket_class
+                                booking.ticket_class
                                 ] ||
                                 booking.ticket_class
                             }
@@ -356,7 +353,7 @@ export default function BookingDetails() {
                             label="نوع الرحلة"
                             value={
                                 booking.trip_type ===
-                                "Round Trip"
+                                    "Round Trip"
                                     ? "ذهاب وعودة"
                                     : "ذهاب فقط"
                             }
@@ -377,8 +374,8 @@ export default function BookingDetails() {
                             value={
                                 booking.departure_datetime
                                     ? formatDateTime(
-                                          booking.departure_datetime
-                                      )
+                                        booking.departure_datetime
+                                    )
                                     : "—"
                             }
                             ltr
@@ -389,8 +386,8 @@ export default function BookingDetails() {
                             value={
                                 booking.boarding_datetime
                                     ? formatDateTime(
-                                          booking.boarding_datetime
-                                      )
+                                        booking.boarding_datetime
+                                    )
                                     : "—"
                             }
                             ltr
@@ -401,8 +398,8 @@ export default function BookingDetails() {
                             value={
                                 booking.arrival_datetime
                                     ? formatDateTime(
-                                          booking.arrival_datetime
-                                      )
+                                        booking.arrival_datetime
+                                    )
                                     : "—"
                             }
                             ltr
@@ -423,10 +420,10 @@ export default function BookingDetails() {
                         <strong dir="ltr">
                             {booking.price != null
                                 ? formatCurrency(
-                                      booking.price,
-                                      booking.currency ||
-                                          "USD"
-                                  )
+                                    booking.price,
+                                    booking.currency ||
+                                    "USD"
+                                )
                                 : "—"}
                         </strong>
                     </div>
@@ -456,11 +453,10 @@ export default function BookingDetails() {
 
                     <div className="reminder-status">
                         <div
-                            className={`reminder-icon ${
-                                booking.reminder_sent
-                                    ? "sent"
-                                    : "pending"
-                            }`}
+                            className={`reminder-icon ${booking.reminder_sent
+                                ? "sent"
+                                : "pending"
+                                }`}
                         >
                             <Bell size={20} />
                         </div>
@@ -496,10 +492,9 @@ export default function BookingDetails() {
             <ConfirmDialog
                 open={deleting}
                 title="حذف الحجز"
-                message={`هل أنت متأكد من حذف الحجز ${
-                    booking.pnr ||
+                message={`هل أنت متأكد من حذف الحجز ${booking.pnr ||
                     `#${booking.id}`
-                }؟ لا يمكن التراجع عن هذا الإجراء.`}
+                    }؟ لا يمكن التراجع عن هذا الإجراء.`}
                 confirmLabel="حذف الحجز"
                 danger
                 onConfirm={handleDelete}

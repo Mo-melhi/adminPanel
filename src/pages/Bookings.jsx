@@ -80,43 +80,44 @@ export default function Bookings() {
     }, [])
 
     const filtered = useMemo(() => {
-        return bookings.filter((b) => {
+        const q = query.trim().toLowerCase()
+
+        return bookings.filter((booking) => {
             const status = String(
-                b.booking_status || ""
+                booking.booking_status || ""
             ).toLowerCase()
 
             const matchesFilter =
                 filter === "all" ||
                 status === filter
 
-            const q = query.trim().toLowerCase()
+            if (!matchesFilter) {
+                return false
+            }
 
-            const customerName =
-                customers.find(
-                    (c) => Number(c.id) === Number(b.customer_id)
-                )?.full_name || ""
+            if (!q) {
+                return true
+            }
 
-            const matchesQuery =
-                !q ||
-                String(b.pnr || "")
-                    .toLowerCase()
-                    .includes(q) ||
-                customerName
-                    .toLowerCase()
-                    .includes(q) ||
-                String(b.flight_number || "")
-                    .toLowerCase()
-                    .includes(q) ||
-                String(b.departure_city || "")
-                    .toLowerCase()
-                    .includes(q) ||
-                String(b.arrival_city || "")
+            return [
+                booking.full_name,
+                booking.pnr,
+                booking.ticket_number,
+                booking.airline,
+                booking.flight_number,
+                booking.departure_city,
+                booking.arrival_city,
+                booking.departure_airport_name,
+                booking.departure_airport_code,
+                booking.arrival_airport_name,
+                booking.arrival_airport_code,
+            ].some((value) =>
+                String(value || "")
                     .toLowerCase()
                     .includes(q)
-
-            return matchesFilter && matchesQuery
+            )
         })
-    }, [bookings, customers, filter, query])
+    }, [bookings, filter, query])
 
     const pageCount = Math.max(
         1,
@@ -129,8 +130,10 @@ export default function Bookings() {
     )
 
     useEffect(() => {
-        setPage(1)
-    }, [filter, query])
+        if (page > pageCount) {
+            setPage(pageCount)
+        }
+    }, [page, pageCount])
 
     async function handleDelete() {
         if (!deleting) return
@@ -286,15 +289,7 @@ export default function Bookings() {
                                             {/* Customer */}
                                             <td>
                                                 <div className="cell-primary">
-                                                    {
-                                                        customers.find(
-                                                            (c) => Number(c.id) === Number(b.customer_id)
-                                                        )?.full_name || 
-                                                        customers.find(
-                                                            (c) => Number(c.id) === Number(b.customer_id)
-                                                        )?.name ||
-                                                        "—"
-                                                    }
+                                                    {b.full_name || "—"}
                                                 </div>
                                             </td>
 

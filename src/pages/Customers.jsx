@@ -11,22 +11,17 @@ import {
 } from "../api/customerApi"
 
 import Avatar from "../components/common/Avatar"
-import StatusBadge from "../components/common/StatusBadge"
 import SearchInput from "../components/common/SearchInput"
 import Pagination from "../components/common/Pagination"
 import CustomerFormModal from "../components/customers/CustomerFormModal"
 import ConfirmDialog from "../components/common/ConfirmDialog"
-import { LoadingState, ErrorState, EmptyState } from "../components/common/States"
-import { formatDate } from "../utils/format"
+import {
+  LoadingState,
+  ErrorState,
+  EmptyState,
+} from "../components/common/States"
 
 import "../styles/table.css"
-
-const FILTERS = [
-  { key: "all", label: "الكل" },
-  { key: "active", label: "نشط" },
-  { key: "vip", label: "VIP" },
-  { key: "inactive", label: "غير نشط" },
-]
 
 const PAGE_SIZE = 5
 
@@ -45,7 +40,6 @@ export default function Customers() {
   const [error, setError] = useState(null)
 
   const [query, setQuery] = useState("")
-  const [filter, setFilter] = useState("all")
   const [page, setPage] = useState(1)
 
   const [formOpen, setFormOpen] = useState(false)
@@ -70,22 +64,26 @@ export default function Customers() {
     load()
   }, [])
 
+  /*
+   * Search customers by the fields that actually exist
+   * in the backend customer model.
+   */
   const filtered = useMemo(() => {
-    return customers.filter((c) => {
-      const matchesFilter =
-        filter === "all" || c.status === filter
+    const q = query.trim().toLowerCase()
 
-      const q = query.trim().toLowerCase()
+    if (!q) return customers
 
-      const matchesQuery =
-        !q ||
-        c.name?.toLowerCase().includes(q) ||
-        c.email?.toLowerCase().includes(q) ||
-        c.phone?.toLowerCase().includes(q)
-
-      return matchesFilter && matchesQuery
+    return customers.filter((customer) => {
+      return (
+        customer.full_name?.toLowerCase().includes(q) ||
+        customer.phone?.toLowerCase().includes(q) ||
+        customer.whatsapp_number?.toLowerCase().includes(q) ||
+        customer.passport_number?.toLowerCase().includes(q) ||
+        customer.nationality?.toLowerCase().includes(q) ||
+        customer.notes?.toLowerCase().includes(q)
+      )
     })
-  }, [customers, filter, query])
+  }, [customers, query])
 
   const totalPages = Math.max(
     1,
@@ -97,23 +95,44 @@ export default function Customers() {
     page * PAGE_SIZE
   )
 
+  /*
+   * Return to page 1 whenever the search changes.
+   */
   useEffect(() => {
     setPage(1)
-  }, [filter, query])
+  }, [query])
+
+  /*
+   * Prevent an invalid page after deleting customers
+   * or changing the search results.
+   */
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages)
+    }
+  }, [page, totalPages])
 
   async function handleSubmit(form) {
     if (editing) {
-      const updated = await updateCustomer(editing.id, form)
+      const updated = await updateCustomer(
+        editing.id,
+        form
+      )
 
-      setCustomers((cs) =>
-        cs.map((c) =>
-          c.id === editing.id ? updated : c
+      setCustomers((current) =>
+        current.map((customer) =>
+          customer.id === editing.id
+            ? updated
+            : customer
         )
       )
     } else {
       const created = await createCustomer(form)
 
-      setCustomers((cs) => [created, ...cs])
+      setCustomers((current) => [
+        created,
+        ...current,
+      ])
     }
 
     setFormOpen(false)
@@ -125,8 +144,11 @@ export default function Customers() {
 
     await deleteCustomer(deleting.id)
 
-    setCustomers((cs) =>
-      cs.filter((c) => c.id !== deleting.id)
+    setCustomers((current) =>
+      current.filter(
+        (customer) =>
+          customer.id !== deleting.id
+      )
     )
 
     setDeleting(null)
@@ -137,7 +159,12 @@ export default function Customers() {
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={load} />
+    return (
+      <ErrorState
+        message={error}
+        onRetry={load}
+      />
+    )
   }
 
   return (
@@ -148,20 +175,6 @@ export default function Customers() {
       <div className="page-toolbar">
 
         <div className="toolbar-left">
-
-          <div className="filter-tabs">
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                className={`filter-tab ${
-                  filter === f.key ? "is-active" : ""
-                }`}
-                onClick={() => setFilter(f.key)}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
 
           <SearchInput
             value={query}
@@ -184,7 +197,6 @@ export default function Customers() {
 
       </div>
 
-
       {/* ================= CUSTOMERS TABLE ================= */}
 
       <div className="table-card">
@@ -193,7 +205,7 @@ export default function Customers() {
 
           <EmptyState
             title="لم يتم العثور على عملاء"
-            text="حاول تغيير البحث أو الفلاتر."
+            text="حاول تغيير البحث."
           />
 
         ) : (
@@ -208,57 +220,64 @@ export default function Customers() {
                   <tr>
                     <th>العميل</th>
                     <th>رقم الهاتف</th>
-                    <th>الدولة</th>
-                    <th>الحالة</th>
+                    <th>الجنسية</th>
                     <th>الإجراءات</th>
                   </tr>
                 </thead>
 
                 <tbody>
 
-                  {pageItems.map((c) => (
+                  {pageItems.map((customer) => (
 
-                    <tr key={c.id}>
+                    <tr key={customer.id}>
+
+                      {/* العميل */}
 
                       <td>
                         <div className="cell-user">
 
-                          <Avatar name={c.name} />
+                          <Avatar
+                            name={customer.full_name}
+                          />
 
                           <div>
+
                             <div className="cell-primary">
-                              {c.name}
+                              {customer.full_name}
                             </div>
 
                             <div className="cell-sub">
-                              {c.email}
+                              جواز السفر:{" "}
+                              {customer.passport_number}
                             </div>
+
                           </div>
 
                         </div>
                       </td>
 
+                      {/* الهاتف */}
+
                       <td className="mono">
-                        {c.phone}
+                        {customer.phone}
                       </td>
+
+                      {/* الجنسية */}
 
                       <td>
-                        {c.country}
+                        {customer.nationality}
                       </td>
 
-
-                      <td>
-                        <StatusBadge status={c.status} />
-                      </td>
+                      {/* الإجراءات */}
 
                       <td>
 
                         <div className="row-actions">
 
                           <Link
-                            to={`/customers/${c.id}`}
+                            to={`/customers/${customer.id}`}
                             className="icon-btn"
-                            aria-label={`عرض ${c.name}`}
+                            aria-label={`عرض ${customer.full_name}`}
                             title="عرض"
                           >
                             <Eye size={17} />
@@ -266,10 +285,10 @@ export default function Customers() {
 
                           <button
                             className="icon-btn"
-                            aria-label={`تعديل ${c.name}`}
+                            aria-label={`تعديل ${customer.full_name}`}
                             title="تعديل"
                             onClick={() => {
-                              setEditing(c)
+                              setEditing(customer)
                               setFormOpen(true)
                             }}
                           >
@@ -278,9 +297,11 @@ export default function Customers() {
 
                           <button
                             className="icon-btn danger"
-                            aria-label={`حذف ${c.name}`}
+                            aria-label={`حذف ${customer.full_name}`}
                             title="حذف"
-                            onClick={() => setDeleting(c)}
+                            onClick={() =>
+                              setDeleting(customer)
+                            }
                           >
                             <Trash2 size={16} />
                           </button>
@@ -299,18 +320,19 @@ export default function Customers() {
 
             </div>
 
-
             {/* ================= PAGINATION ================= */}
 
             <div className="table-foot">
 
               <span className="foot-count">
-                عرض {pageItems.length} من {filtered.length} عميل
+                عرض {pageItems.length} من{" "}
+                {filtered.length} عميل
               </span>
 
               <Pagination
                 page={page}
                 totalPages={totalPages}
+                total={filtered.length}
                 onChange={setPage}
               />
 
@@ -321,7 +343,6 @@ export default function Customers() {
         )}
 
       </div>
-
 
       {/* ================= CUSTOMER FORM ================= */}
 
@@ -337,13 +358,12 @@ export default function Customers() {
         />
       )}
 
-
       {/* ================= DELETE CONFIRMATION ================= */}
 
       <ConfirmDialog
         open={Boolean(deleting)}
         title="حذف العميل"
-        message={`هل أنت متأكد من رغبتك في حذف ${deleting?.name}؟ لا يمكن التراجع عن هذا الإجراء.`}
+        message={`هل أنت متأكد من رغبتك في حذف ${deleting?.full_name}؟ لا يمكن التراجع عن هذا الإجراء.`}
         confirmLabel="حذف"
         danger
         onConfirm={handleDelete}

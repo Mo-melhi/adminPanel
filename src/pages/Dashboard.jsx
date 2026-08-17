@@ -3,7 +3,6 @@ import { Users, Plane, Ticket, Bell } from "lucide-react"
 import { useLayoutMeta } from "../components/layout/layoutMeta"
 import { useApi } from "../hooks/useApi"
 import { getDashboardStats } from "../api/dashboardApi"
-import { getBookings } from "../api/bookingApi"
 import { getActivity } from "../api/notificationApi"
 import StatCard from "../components/dashboard/StatCard"
 import UpcomingBookings from "../components/dashboard/UpcomingBookings"
@@ -21,8 +20,6 @@ export default function Dashboard() {
   }, [setMeta])
 
   const { data: stats, loading, error, reload } = useApi(getDashboardStats)
-
-  const { data: upcoming } = useApi(() => getBookings({ upcoming: true, limit: 5 }))
   const { data: activity } = useApi(getActivity)
 
   if (loading) return <LoadingState label="Loading dashboard" />
@@ -73,7 +70,7 @@ export default function Dashboard() {
         <ActivityFeed items={activity || []} />
 
         <UpcomingBookings
-          bookings={Array.isArray(upcoming) ? upcoming : upcoming?.items || []}
+          bookings={stats.upcomingBookings || []}
         />
 
       </section>

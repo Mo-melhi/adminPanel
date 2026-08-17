@@ -16,7 +16,6 @@ const EMPTY = {
     arrival_city: "",
     departure_datetime: "",
     arrival_datetime: "",
-    boarding_datetime: "",
     ticket_class: "Economy",
     trip_type: "One Way",
     price: "",
@@ -76,11 +75,6 @@ export default function BookingFormModal({
                         initial.arrival_datetime
                     ),
 
-                boarding_datetime:
-                    toDateTimeLocal(
-                        initial.boarding_datetime
-                    ),
-
                 price: String(
                     initial.price ?? ""
                 ),
@@ -123,8 +117,24 @@ export default function BookingFormModal({
             e.departure_city = "مدينة المغادرة مطلوبة"
         }
 
+        if (!form.departure_airport_name.trim()) {
+            e.departure_airport_name = "اسم مطار المغادرة مطلوب"
+        }
+
+        if (!/^[A-Za-z]{3}$/.test(form.departure_airport_code.trim())) {
+            e.departure_airport_code = "رمز المطار يجب أن يتكون من 3 أحرف"
+        }
+
         if (!form.arrival_city.trim()) {
             e.arrival_city = "مدينة الوصول مطلوبة"
+        }
+
+        if (!form.arrival_airport_name.trim()) {
+            e.arrival_airport_name = "اسم مطار الوصول مطلوب"
+        }
+
+        if (!/^[A-Za-z]{3}$/.test(form.arrival_airport_code.trim())) {
+            e.arrival_airport_code = "رمز المطار يجب أن يتكون من 3 أحرف"
         }
 
         if (!form.departure_datetime) {
@@ -135,8 +145,10 @@ export default function BookingFormModal({
             e.arrival_datetime = "تاريخ الوصول مطلوب"
         }
 
-        if (!form.price) {
+        if (form.price === "") {
             e.price = "السعر مطلوب"
+        } else if (Number(form.price) < 0) {
+            e.price = "السعر لا يمكن أن يكون سالبًا"
         }
 
         setErrors(e)
@@ -154,8 +166,53 @@ export default function BookingFormModal({
         try {
             const payload = {
                 ...form,
+
                 customer_id: Number(form.customer_id),
-                price: Number(form.price),
+
+                ticket_number:
+                    form.ticket_number.trim() || undefined,
+
+                pnr:
+                    form.pnr.trim() || undefined,
+
+                airline:
+                    form.airline.trim(),
+
+                flight_number:
+                    form.flight_number.trim(),
+
+                departure_airport_name:
+                    form.departure_airport_name.trim(),
+
+                departure_airport_code:
+                    form.departure_airport_code.trim().toUpperCase(),
+
+                departure_city:
+                    form.departure_city.trim(),
+
+                arrival_airport_name:
+                    form.arrival_airport_name.trim(),
+
+                arrival_airport_code:
+                    form.arrival_airport_code.trim().toUpperCase(),
+
+                arrival_city:
+                    form.arrival_city.trim(),
+
+                departure_datetime:
+                    form.departure_datetime,
+
+                arrival_datetime:
+                    form.arrival_datetime,
+
+                price:
+                    Number(form.price),
+
+                currency:
+                    form.currency.toUpperCase(),
+
+                booking_status:
+                    form.booking_status,
             }
 
             await onSubmit(payload)
@@ -196,7 +253,7 @@ export default function BookingFormModal({
                                 key={customer.id}
                                 value={customer.id}
                             >
-                                {customer.full_name || customer.name}
+                                {customer.full_name}
                             </option>
                         ))}
                     </select>
@@ -353,19 +410,6 @@ export default function BookingFormModal({
                             {errors.departure_datetime}
                         </span>
                     )}
-                </div>
-
-                <div className="form-field">
-                    <label>وقت الصعود للطائرة</label>
-
-                    <input
-                        className="input"
-                        type="datetime-local"
-                        value={form.boarding_datetime}
-                        onChange={(e) =>
-                            update("boarding_datetime", e.target.value)
-                        }
-                    />
                 </div>
 
                 {/* الوصول */}

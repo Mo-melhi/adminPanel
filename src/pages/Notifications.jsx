@@ -12,7 +12,6 @@ import {
 import { usePageMeta } from "../components/layout/layoutMeta"
 import { notificationApi } from "../api/notificationApi"
 import { bookingApi } from "../api/bookingApi"
-import { customerApi } from "../api/customerApi"
 
 import ConfirmDialog from "../components/common/ConfirmDialog"
 import { LoadingState, ErrorState, EmptyState } from "../components/common/States"
@@ -58,7 +57,6 @@ export default function Notifications() {
 
     const [notifications, setNotifications] = useState([])
     const [bookings, setBookings] = useState([])
-    const [customers, setCustomers] = useState([])
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -82,16 +80,13 @@ export default function Notifications() {
             const [
                 notificationData,
                 bookingData,
-                customerData,
             ] = await Promise.all([
                 notificationApi.history(),
                 bookingApi.list(),
-                customerApi.list(),
             ])
 
             setNotifications(notificationData || [])
             setBookings(bookingData || [])
-            setCustomers(customerData || [])
         } catch (err) {
             setError(
                 err.message ||
@@ -109,25 +104,28 @@ export default function Notifications() {
     const enrichedNotifications = useMemo(() => {
         return notifications.map((notification) => {
             const booking = bookings.find(
-                (b) => b.id === notification.booking_id
-            )
-
-            const customer = customers.find(
-                (c) => c.id === notification.customer_id
+                (b) =>
+                    Number(b.id) ===
+                    Number(notification.booking_id)
             )
 
             return {
                 ...notification,
                 booking,
-                customer,
+
                 customerName:
                     notification.customer_name ||
-                    customer?.full_name ||
-                    customer?.name ||
-                    "غير معروف",
+                    notification.full_name ||
+                    booking?.full_name ||
+                    "---",
+
+                flightNumber:
+                    notification.flight_number ||
+                    booking?.flight_number ||
+                    "---",
             }
         })
-    }, [notifications, bookings, customers])
+    }, [notifications, bookings])
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase()
@@ -143,10 +141,13 @@ export default function Notifications() {
                     notification.customerName
                         ?.toLowerCase()
                         .includes(q) ||
-                    notification.flight_number
+                    notification.flightNumber
                         ?.toLowerCase()
                         .includes(q) ||
                     notification.booking?.pnr
+                        ?.toLowerCase()
+                        .includes(q) ||
+                    notification.booking?.ticket_number
                         ?.toLowerCase()
                         .includes(q)
 
@@ -226,19 +227,16 @@ export default function Notifications() {
     }
 
     function getBookingCustomer(booking) {
-        const customer = customers.find(
-            (c) => c.id === booking.customer_id
-        )
-
         return {
             ...booking,
+
             customerName:
-                customer?.full_name ||
-                customer?.name ||
+                booking.full_name ||
                 "غير معروف",
+
             customerPhone:
-                customer?.whatsapp_number ||
-                customer?.phone ||
+                booking.whatsapp_number ||
+                booking.phone ||
                 "",
         }
     }
@@ -284,7 +282,7 @@ export default function Notifications() {
                         </strong>
 
                         <span>
-                            إجمالي الإشعارات
+                            آخر الإشعارات
                         </span>
                     </div>
                 </div>
@@ -539,7 +537,7 @@ function NotificationRow({
                     <span>
                         الرحلة{" "}
                         <strong dir="ltr">
-                            {notification.flight_number ||
+                            {notification.flightNumber ||
                                 "—"}
                         </strong>
                     </span>
@@ -616,7 +614,7 @@ function ReminderPicker({
 
                 <div className="reminder-bookings">
                     {bookings.length ===
-                    0 ? (
+                        0 ? (
                         <p className="muted">
                             لا توجد حجوزات متاحة
                             لإرسال تذكير.

@@ -46,7 +46,7 @@ export default function UpcomingBookings({ bookings = [] }) {
                 <div>
                   <span className="upcoming-label">العميل</span>
                   <strong>
-                    {b.customer_name || b.customerName || "---"}
+                    {b.full_name || "---"}
                   </strong>
                 </div>
 
